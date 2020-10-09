@@ -16,7 +16,7 @@ from flask.cli import with_appcontext
 # --------------------
 # Authenticate an existing post: Send a GET request to route of authenticateUser() fn
 # Example request:
-#   curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"om", "passwordAPI":"om@123"}' http://localhost:5000/authenticateUser;
+#   curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "passwordAPI":"ankita@123"}' http://localhost:5000/authenticateUser;
 # --------------------
 # Follow an existing user: Send a POST request to route of addFollower() fn
 # Example request:
