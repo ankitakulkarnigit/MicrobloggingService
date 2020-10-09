@@ -15,6 +15,10 @@ import hashlib
 # Example request:
 #   curl -i -X GET http://localhost:5000/getPublicTimeline;
 # --------------------
+# Get a home timeline: Send a GET request to route of getHomeTimeline() fn
+# Example request:
+#   curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita"}' http://localhost:5000/getHomeTimeline;
+# --------------------
 # Post a tweet: Send a POST request to route of postTweet() fn
 # Example request:
 #   curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "tweetAPI":"This is an example post"}' http://localhost:5000/postTweet;
@@ -102,6 +106,7 @@ def getHomeTimeline():
         response.autocorrect_location_header = False
         return response
 
+# function to post a tweet
 @app.route("/postTweet", methods=['POST'])
 def postTweet():
     params = request.get_json()
