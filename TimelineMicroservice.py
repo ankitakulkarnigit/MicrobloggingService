@@ -40,7 +40,7 @@ import hashlib
 # table3: Tweets
 # username
 # tweet
-# timestamp
+# time_stamp
 
 
 # config variables
