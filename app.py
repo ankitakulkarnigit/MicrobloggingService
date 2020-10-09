@@ -43,7 +43,7 @@ from flask.cli import with_appcontext
 # table3: Tweets
 # username
 # tweet
-# timestamp
+# time_stamp
 
 
 # config variables
