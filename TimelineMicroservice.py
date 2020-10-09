@@ -112,14 +112,17 @@ def postTweet():
     if not user_name or not tweet_text:
         return jsonify(get_response(status_code=409, message="username / tweet is not in request")), 409
     else:
-        with sqlite3.connect("UsersMicroservice.db") as con:
-            cur = con.cursor()
-            cur.execute("INSERT INTO Tweets (username, tweet) VALUES (?,?)", (user_name, tweet_text))
-            con.commit()
+        if query_db('select username from Users where username = ?', [user_name]):
+            with sqlite3.connect("UsersMicroservice.db") as con:
+                cur = con.cursor()
+                cur.execute("INSERT INTO Tweets (username, tweet) VALUES (?,?)", (user_name, tweet_text))
+                con.commit()
 
-    response = jsonify(get_response(status_code=201, message="Tweet posted successfully!!"))
-    response.status_code = 201
-    response.autocorrect_location_header = False
-    return response
+            response = jsonify(get_response(status_code=201, message="Tweet posted successfully!!"))
+            response.status_code = 201
+            response.autocorrect_location_header = False
+            return response
+        else:
+            return jsonify(get_response(status_code=409, message="Username does not exist. Create a user first to proceed")), 409
 
 app.run(debug = True) 
