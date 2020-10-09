@@ -132,8 +132,8 @@ def authenticateUser():
             return response
         else:
             print("User Authentication Error")
-            response = jsonify(get_response(status_code=500, message="False"))
-            response.status_code = 500
+            response = jsonify(get_response(status_code=400, message="False"))
+            response.status_code = 400
             return response
 
 # function to add a follower to the following list
