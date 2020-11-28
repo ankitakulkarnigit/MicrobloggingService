@@ -1,55 +1,94 @@
-CPSC 449 WEB BACK-END ENGINEERING 
-PROJECT 2- FALL 2020
+CPSC 449 WEB BACK-END ENGINEERING PROJECT 5- FALL 2020
 
 Project by: 
   1. Ankita Udaykumar Kulkarni – CWID 887871861, Email- ankitak@csu.fullerton.edu 
   2. Aditi Pratap Patil – CWID 887465649, Email – aditipatil138@csu.fullerton.edu
+ 
+Project Description: 
+This is a web back-end project in which three microservices are created: 
+  1. Direct Message 
+  2. Users 
+  3. Timeline 
+These microservices are created for a microblogging service. This project has used Python Flak, SQLite3 Database and DynamoDB. The Direct Message microservice includes send direct message, reply to direct message, list messages and list replies. The User microservice includes creating user, authenticating user, add followers, remove followers. Timeline microservice posts a post on timeline, displays post of the user, displays post of all the follower’s user follows, Displays post of the all the users.
 
-Project Description: This is a web back-end project in which two microservices are created: 
-  1. Users 
-  2. Timeline 
-  
-These microservices are created for a microblogging service. This project has used Python Flak, SQLite3 Database. The User microservice includes creating user, authenticating user, add followers, remove followers. Timeline microservice posts a post on timeline, Displays post of the user, Displays post of all the followers user follows, Displays post of the all the users.
+Steps to run the project: To run this project on Tuffix OS-  
+1. Install python3 
+  $ sudo apt-get install python3.8
 
-Steps to run the project: 
-To run this project on Tuffix OS- 
-1. Install python 3 
-  $ sudo apt-get install python3.8 
 2. Install pip 
-  $ sudo apt install python3-pip 
+  $ sudo apt install python3-pip
+ 
 3. Install Flak API and pugsql 
   $ sudo apt update 
-  $ python3 -m pip install Flask-API pugsql 
+  $ python3 -m pip install Flask-API pugsql
+
 4. Install Foreman and HTTPie 
-  $ sudo apt install –yes ruby-foreman httpie 
-5. Clone the GitHub repository https://github.com/ankitakulkarnigit/MicrobloggingService 
-6. cd to MicrobloggingService dir and run following commands: 
-  $ flask init 
-  $ foreman start 
+  $ sudo apt install --yes ruby-foreman httpie
 
-After this we can see the two applications running on different ports. APIs can now be tested using the curl commands mentioned below or in app.py.
-1) User 
-  i) Create a new user: 
-  $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"newuser", "emailAPI":"newuser@gmail.com", "passwordAPI":"newuser@123"}' http://localhost:5000/createUser;
-  
-  ii) Authenticate an existing post:
-  $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "passwordAPI":"ankita@123"}' http://localhost:5000/authenticateUser;
+5. Setting up DynamoDB Local: 
+  1. Download DynamoDB for free using one of the following links from the following website:    https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DynamoDBLocal.DownloadingAndRunning.html
+  2. After you download the archive, extract the contents and copy the extracted directory to a location of your choice.
+  3. To start DynamoDB on your computer, open a command prompt window, navigate to the directory where you extracted DynamoDBLocal.jar, and enter the following command.
+    $ java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
 
-iii) Follow an existing user: 
-  $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"om", "usernameFollowingAPI":"ankita"}' http://localhost:5000/addFollower;
+6. Clone the GitHub repository
+  https://github.com/ankitakulkarnigit/MicrobloggingService.git
 
-iv) Remove an existing follower: 
-  $ curl -i -X DELETE -H 'Content-Type:application/json' -d '{"usernameAPI":"om", "usernameFollowingAPI":"ankita"}' http://localhost:5000/removeFollower;
+7. Configure AWS CLI 
+  $ sudo apt update 
+  $ sudo apt install –yes awscli 
+  $ aws configure 
+    AWS Access Key ID [None]: fakeMyKeyId 
+    AWS Secret Access Key [None]: fakeSecretAccessKey 
+    Default region name [None]: us-west-2 
+    Default output format [None]: table
 
-2) Timeline
-  v) Get user timeline: 
-  $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita"}' http://localhost:5100/getUserTimeline;
+8. Install Boto3 
+  $ sudo apt install –yes python3-boto3
+
+9. Adding the DynamoDB Flask extension 
+  $ python3 -m pip install –user flask-dynamo
+
+10. cd to MicrobloggingService dir and run following commands: 
+  $ FLASK_APP=app.py 
+  $ flask init $ foreman start
+
+After this we can see the three applications running on different ports. APIs can now be tested using the curl commands mentioned below or in app.py.
+1. Direct Message 
+  i. Send Direct message: 
+    $ curl -i -X POST -H 'Content-Type:application/json' –d '{"to":"ankita", "from":"aditi", "message":"How are you?"}'http://localhost:5200/sendMessage;
   
-  vi) Get public timeine: 
-  $ curl -i -X GET http://localhost:5100/getPublicTimeline;
+  ii. Reply to Direct message: 
+    $ curl -i -X POST -H 'Content-Type:application/json' –d '{"messageId":"00bf7f51-4636-4008-80fe-f65d925c17ab", "reply":"I am fine"}'http://localhost:5200/reply;
   
-  vii) Get a home timeline: 
-  $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita"}' http://localhost:5100/getHomeTimeline;
+  iii. List Direct Message for user:
+    $ curl -i -X GET -H 'Content-Type:application/json' -d '{"username":"Rick"}'http://localhost:5200/list/messages;
+
+  iv. List Replies to message id: 
+    $ curl -i -X GET -H 'Content-Type:application/json' -d '{"messageId":"9d529dd4-548b-4258-aa8e-23e34dc8d48i"}'http://localhost:5200/list/replies;
+
+2. User 
+  i. Create a new user: 
+    $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"newuser", "emailAPI":"newuser@gmail.com", "passwordAPI":"newuser@123"}' http://localhost:5000/createUser;
+    
+  ii. Authenticate an existing post: 
+    $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "passwordAPI":"ankita@123"}' http://localhost:5000/authenticateUser;
   
-  viii) Post a tweet: 
-  $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "tweetAPI":"This is an example post"}' http://localhost:5100/postTweet;
+  iii. Follow an existing user: 
+    $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"om", "usernameFollowingAPI":"ankita"}' http://localhost:5000/addFollower;
+ 
+  iv. Remove an existing follower: 
+    $ curl -i -X DELETE -H 'Content-Type:application/json' -d '{"usernameAPI":"om", "usernameFollowingAPI":"ankita"}' http://localhost:5000/removeFollower;
+  
+3. Timeline
+  i. Get user timeline: 
+    $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita"}' http://localhost:5100/getUserTimeline;
+  
+  ii. Get public timeine: 
+    $ curl -i -X GET http://localhost:5100/getPublicTimeline
+  
+  iii. Get a home timeline: 
+    $ curl -i -X GET -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita"}' http://localhost:5100/getHomeTimeline;
+  
+  iv. Post a tweet:
+    $ curl -i -X POST -H 'Content-Type:application/json' -d '{"usernameAPI":"ankita", "tweetAPI":"This is an example post"}' http://localhost:5100/postTweet;
